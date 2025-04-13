@@ -15,7 +15,7 @@ func main() {
 	// Read configuration (for simplicity, using an environment variable with a default)
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
-		dbURL = "postgres://user:mvressys@localhost:5432/moviereservation?sslmode=disable"
+		dbURL = "postgres://user:password@localhost:5432/moviereservation?sslmode=disable"
 	}
 
 	// Initialize the PostgreSQL connection using SQLX
