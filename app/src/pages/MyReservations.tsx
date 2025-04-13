@@ -16,7 +16,7 @@ const MyReservations: React.FC = () => {
   useEffect(() => {
     if (token) {
       getReservations(token)
-        .then((data) => setReservations(data))
+        .then((data) => setReservations(data || []))
         .catch((err) => console.error(err));
     }
   }, [token]);

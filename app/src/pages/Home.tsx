@@ -20,7 +20,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (token) {
       getProjections(token)
-        .then((data) => setProjections(data))
+        .then((data) => setProjections(data || []))
         .catch((err) => console.error(err));
     }
   }, [token]);
