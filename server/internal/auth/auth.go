@@ -2,49 +2,61 @@ package auth
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
 	"supertickets/internal/models"
 	"supertickets/internal/utils"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	jwt "github.com/golang-jwt/jwt/v5"
 )
 
 // Claims defines the structure for JWT claims.
 type Claims struct {
 	UserID int64  `json:"user_id"`
 	Role   string `json:"role"`
-	jwt.StandardClaims
+	Expire int64  `json:"expire"`
 }
 
 // GenerateToken creates a JWT for a given user.
 func GenerateToken(user *models.User) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
-	claims := &Claims{
-		UserID: user.ID,
-		Role:   user.Role,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": strconv.FormatInt(user.ID, 10),
+		"role":    user.Role,
+		"expire":  expirationTime.Unix(),
+	})
 	return token.SignedString([]byte(utils.EnvVars.JwtKey()))
+}
+
+func checkTokenAlg(token *jwt.Token) (interface{}, error) {
+	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+	}
+
+	return []byte(utils.EnvVars.JwtKey()), nil
 }
 
 // ValidateToken parses and validates a JWT.
 func ValidateToken(tokenStr string) (*Claims, error) {
-	claims := &Claims{}
-	token, err := jwt.ParseWithClaims(
-		tokenStr,
-		claims,
-		func(token *jwt.Token) (any, error) {
-			return utils.EnvVars.JwtKey(), nil
-		},
-	)
+	token, err := jwt.Parse(tokenStr, checkTokenAlg)
 	if err != nil {
 		return nil, err
 	}
-	if !token.Valid {
-		return nil, errors.New("invalid token")
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		userId, err := strconv.ParseInt(claims["user_id"].(string), 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		role := claims["role"].(string)
+		expire := claims["expire"].(float64)
+		return &Claims{
+			UserID: userId,
+			Role:   role,
+			Expire: int64(expire),
+		}, nil
+	} else {
+		return nil, errors.New("invalid JWT Claims format")
 	}
-	return claims, nil
 }
