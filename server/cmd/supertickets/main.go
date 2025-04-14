@@ -14,20 +14,16 @@ import (
 func main() {
 	utils.LoadEnvVars()
 
-	
 	db, err := repository.NewPostgresDB(utils.EnvVars.DbUrl())
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
-	defer db.Close()
+	defer repository.ClosePostgresDB(db)
 
-	
 	repo := repository.NewRepository(db)
 
-	
 	srv := server.NewServer(repo)
 
-	
 	httpServer := &http.Server{
 		Handler:      srv.Router,
 		Addr:         ":" + utils.EnvVars.Port(),
@@ -38,3 +34,4 @@ func main() {
 	log.Println("Server starting on :8080")
 	log.Fatal(httpServer.ListenAndServe())
 }
+

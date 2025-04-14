@@ -10,7 +10,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-
 func GetMoviesHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		movies, err := repo.MovieRepo.GetMovies()
@@ -18,10 +17,13 @@ func GetMoviesHandler(repo *repository.Repository) http.HandlerFunc {
 			http.Error(w, "Error fetching movies", http.StatusInternalServerError)
 			return
 		}
-		json.NewEncoder(w).Encode(movies)
+
+		err = json.NewEncoder(w).Encode(movies)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
 	}
 }
-
 
 func CreateMovieHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -34,11 +36,15 @@ func CreateMovieHandler(repo *repository.Repository) http.HandlerFunc {
 			http.Error(w, "Error creating movie", http.StatusInternalServerError)
 			return
 		}
+
+		err := json.NewEncoder(w).Encode(movie)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
+
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(movie)
 	}
 }
-
 
 func UpdateMovieHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -58,10 +64,14 @@ func UpdateMovieHandler(repo *repository.Repository) http.HandlerFunc {
 			http.Error(w, "Error updating movie", http.StatusInternalServerError)
 			return
 		}
-		json.NewEncoder(w).Encode(movie)
+
+		err = json.NewEncoder(w).Encode(movie)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
+		w.WriteHeader(http.StatusOK)
 	}
 }
-
 
 func DeleteMovieHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

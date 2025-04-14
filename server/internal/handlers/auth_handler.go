@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log/slog"
 	"net/http"
 	"supertickets/internal/auth"
@@ -16,7 +16,7 @@ import (
 func RegisterHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var user models.User
-		body, err := ioutil.ReadAll(r.Body)
+		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			http.Error(w, "Invalid request", http.StatusBadRequest)
 			return
@@ -48,10 +48,13 @@ func RegisterHandler(repo *repository.Repository) http.HandlerFunc {
 			return
 		}
 
+		err = json.NewEncoder(w).Encode(user)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
+
 		w.Header().Set("Authorization", "Bearer "+token)
 		w.WriteHeader(http.StatusCreated)
-
-		json.NewEncoder(w).Encode(user)
 	}
 }
 
@@ -86,9 +89,12 @@ func LoginHandler(repo *repository.Repository) http.HandlerFunc {
 			return
 		}
 
+		err = json.NewEncoder(w).Encode(user)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
+
 		w.Header().Set("Authorization", "Bearer "+token)
 		w.WriteHeader(http.StatusOK)
-
-		json.NewEncoder(w).Encode(map[string]string{"message": "login successful"})
 	}
 }

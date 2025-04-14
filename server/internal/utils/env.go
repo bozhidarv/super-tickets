@@ -7,7 +7,6 @@ import (
 
 var EnvVars *models.ReadOnlyEnvVars
 
-
 func LoadEnvVars() {
 	envVars := &models.EnvVars{}
 
@@ -29,5 +28,5 @@ func LoadEnvVars() {
 	}
 	envVars.SetJwtKey(jwtKey)
 
-	EnvVars = &models.ReadOnlyEnvVars{ EnvVars: *envVars }
+	EnvVars = &models.ReadOnlyEnvVars{EnvVars: *envVars}
 }

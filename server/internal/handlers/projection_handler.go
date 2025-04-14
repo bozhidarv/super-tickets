@@ -2,14 +2,13 @@ package handlers
 
 import (
 	"encoding/json"
-	"supertickets/internal/models"
-	"supertickets/internal/repository"
 	"net/http"
 	"strconv"
+	"supertickets/internal/models"
+	"supertickets/internal/repository"
 
 	"github.com/gorilla/mux"
 )
-
 
 func GetProjectionsHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -18,27 +17,33 @@ func GetProjectionsHandler(repo *repository.Repository) http.HandlerFunc {
 			http.Error(w, "Error fetching projections", http.StatusInternalServerError)
 			return
 		}
-		json.NewEncoder(w).Encode(projections)
+
+		err = json.NewEncoder(w).Encode(projections)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
 	}
 }
-
 
 func CreateProjectionHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var proj models.Projection
-		if err := json.NewDecoder(r.Body).Decode(&proj); err != nil {
+		var projection models.Projection
+		if err := json.NewDecoder(r.Body).Decode(&projection); err != nil {
 			http.Error(w, "Invalid JSON", http.StatusBadRequest)
 			return
 		}
-		if err := repo.ProjectionRepo.CreateProjection(&proj); err != nil {
+		if err := repo.ProjectionRepo.CreateProjection(&projection); err != nil {
 			http.Error(w, "Error creating projection", http.StatusInternalServerError)
 			return
 		}
+
+		err := json.NewEncoder(w).Encode(projection)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(proj)
 	}
 }
-
 
 func UpdateProjectionHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -48,20 +53,24 @@ func UpdateProjectionHandler(repo *repository.Repository) http.HandlerFunc {
 			http.Error(w, "Invalid projection ID", http.StatusBadRequest)
 			return
 		}
-		var proj models.Projection
-		if err := json.NewDecoder(r.Body).Decode(&proj); err != nil {
+		var projection models.Projection
+		if err := json.NewDecoder(r.Body).Decode(&projection); err != nil {
 			http.Error(w, "Invalid JSON", http.StatusBadRequest)
 			return
 		}
-		proj.ID = id
-		if err := repo.ProjectionRepo.UpdateProjection(&proj); err != nil {
+		projection.ID = id
+		if err := repo.ProjectionRepo.UpdateProjection(&projection); err != nil {
 			http.Error(w, "Error updating projection", http.StatusInternalServerError)
 			return
 		}
-		json.NewEncoder(w).Encode(proj)
+
+		err = json.NewEncoder(w).Encode(projection)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
+		w.WriteHeader(http.StatusOK)
 	}
 }
-
 
 func DeleteProjectionHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

@@ -18,7 +18,12 @@ func GetUsersHandler(repo *repository.Repository) http.HandlerFunc {
 			http.Error(w, "Error fetching users", http.StatusInternalServerError)
 			return
 		}
-		json.NewEncoder(w).Encode(users)
+
+		err = json.NewEncoder(w).Encode(users)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
@@ -50,8 +55,11 @@ func CreateUserHandler(repo *repository.Repository) http.HandlerFunc {
 			return
 		}
 
+		err = json.NewEncoder(w).Encode(user)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(user)
 	}
 }
 
@@ -96,7 +104,11 @@ func UpdateUserHandler(repo *repository.Repository) http.HandlerFunc {
 			return
 		}
 
-		json.NewEncoder(w).Encode(user)
+		err = json.NewEncoder(w).Encode(user)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
+		w.WriteHeader(http.StatusOK)
 	}
 }
 

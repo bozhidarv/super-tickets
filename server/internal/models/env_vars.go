@@ -1,8 +1,8 @@
 package models
 
 type EnvVars struct {
-	dbUrl string
-	port string
+	dbUrl  string
+	port   string
 	jwtKey string
 }
 
@@ -25,6 +25,7 @@ func (e *EnvVars) Port() string {
 func (e *EnvVars) SetJwtKey(key string) {
 	e.jwtKey = key
 }
+
 func (e *EnvVars) JwtKey() string {
 	return e.jwtKey
 }
@@ -44,5 +45,3 @@ func (e *ReadOnlyEnvVars) SetPort(url string) {
 func (e *ReadOnlyEnvVars) SetJwtKey(url string) {
 	panic("SetJwtKey is called on ReadOnlyEnvVars")
 }
-
-

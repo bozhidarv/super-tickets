@@ -2,16 +2,15 @@ package handlers
 
 import (
 	"encoding/json"
+	"net/http"
+	"strconv"
 	"supertickets/internal/auth"
 	"supertickets/internal/middleware"
 	"supertickets/internal/models"
 	"supertickets/internal/repository"
-	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 )
-
 
 func CreateReservationHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -32,23 +31,23 @@ func CreateReservationHandler(repo *repository.Repository) http.HandlerFunc {
 			http.Error(w, "Error creating reservation", http.StatusInternalServerError)
 			return
 		}
+
+		err := json.NewEncoder(w).Encode(resv)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(resv)
 	}
 }
 
-
-
 func GetReservationsHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		
 		claims, ok := r.Context().Value(middleware.ContextUserKey).(*auth.Claims)
 		if !ok || claims == nil {
 			http.Error(w, "Unable to retrieve user info from token", http.StatusUnauthorized)
 			return
 		}
 
-		
 		userID := claims.UserID
 
 		reservations, err := repo.ReservationRepo.GetReservationsByUser(userID)
@@ -57,10 +56,13 @@ func GetReservationsHandler(repo *repository.Repository) http.HandlerFunc {
 			return
 		}
 
-		json.NewEncoder(w).Encode(reservations)
+		err = json.NewEncoder(w).Encode(reservations)
+		if err != nil {
+			http.Error(w, "Server Error", http.StatusInternalServerError)
+		}
+		w.WriteHeader(http.StatusOK)
 	}
 }
-
 
 func DeleteReservationHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
