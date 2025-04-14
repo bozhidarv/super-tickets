@@ -11,14 +11,12 @@ import (
 	jwt "github.com/golang-jwt/jwt/v5"
 )
 
-// Claims defines the structure for JWT claims.
 type Claims struct {
 	UserID int64  `json:"user_id"`
 	Role   string `json:"role"`
 	Expire int64  `json:"expire"`
 }
 
-// GenerateToken creates a JWT for a given user.
 func GenerateToken(user *models.User) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -37,7 +35,6 @@ func checkTokenAlg(token *jwt.Token) (interface{}, error) {
 	return []byte(utils.EnvVars.JwtKey()), nil
 }
 
-// ValidateToken parses and validates a JWT.
 func ValidateToken(tokenStr string) (*Claims, error) {
 	token, err := jwt.Parse(tokenStr, checkTokenAlg)
 	if err != nil {

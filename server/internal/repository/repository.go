@@ -2,7 +2,7 @@ package repository
 
 import "github.com/jmoiron/sqlx"
 
-// Repository aggregates all sub-repositories.
+
 type Repository struct {
 	UserRepo        UserRepository
 	MovieRepo       MovieRepository
@@ -10,7 +10,7 @@ type Repository struct {
 	ReservationRepo ReservationRepository
 }
 
-// NewRepository creates a new Repository given a sqlx.DB connection.
+
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		UserRepo:        NewUserRepository(db),
@@ -20,7 +20,7 @@ func NewRepository(db *sqlx.DB) *Repository {
 	}
 }
 
-// NewPostgresDB returns a new database connection.
+
 func NewPostgresDB(dbURL string) (*sqlx.DB, error) {
 	return sqlx.Connect("postgres", dbURL)
 }

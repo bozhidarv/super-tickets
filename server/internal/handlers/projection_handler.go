@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// GetProjectionsHandler returns a list of projections.
+
 func GetProjectionsHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		projections, err := repo.ProjectionRepo.GetProjections()
@@ -22,7 +22,7 @@ func GetProjectionsHandler(repo *repository.Repository) http.HandlerFunc {
 	}
 }
 
-// CreateProjectionHandler creates a new projection.
+
 func CreateProjectionHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var proj models.Projection
@@ -39,7 +39,7 @@ func CreateProjectionHandler(repo *repository.Repository) http.HandlerFunc {
 	}
 }
 
-// UpdateProjectionHandler updates an existing projection.
+
 func UpdateProjectionHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -62,7 +62,7 @@ func UpdateProjectionHandler(repo *repository.Repository) http.HandlerFunc {
 	}
 }
 
-// DeleteProjectionHandler deletes a projection.
+
 func DeleteProjectionHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)

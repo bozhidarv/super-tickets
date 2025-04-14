@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// GetMoviesHandler returns a list of movies.
+
 func GetMoviesHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		movies, err := repo.MovieRepo.GetMovies()
@@ -22,7 +22,7 @@ func GetMoviesHandler(repo *repository.Repository) http.HandlerFunc {
 	}
 }
 
-// CreateMovieHandler creates a new movie (admin-only).
+
 func CreateMovieHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var movie models.Movie
@@ -39,7 +39,7 @@ func CreateMovieHandler(repo *repository.Repository) http.HandlerFunc {
 	}
 }
 
-// UpdateMovieHandler updates an existing movie.
+
 func UpdateMovieHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -62,7 +62,7 @@ func UpdateMovieHandler(repo *repository.Repository) http.HandlerFunc {
 	}
 }
 
-// DeleteMovieHandler deletes a movie.
+
 func DeleteMovieHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)

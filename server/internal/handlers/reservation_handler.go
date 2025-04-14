@@ -12,7 +12,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// CreateReservationHandler creates a new reservation.
+
 func CreateReservationHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var resv models.Reservation
@@ -37,18 +37,18 @@ func CreateReservationHandler(repo *repository.Repository) http.HandlerFunc {
 	}
 }
 
-// GetReservationsHandler returns reservations for a given user.
-// (For simplicity, the user ID is taken from a query parameter. In production, you would extract it from the JWT.)
+
+
 func GetReservationsHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// Retrieve the claims from the context (set by the auth middleware)
+		
 		claims, ok := r.Context().Value(middleware.ContextUserKey).(*auth.Claims)
 		if !ok || claims == nil {
 			http.Error(w, "Unable to retrieve user info from token", http.StatusUnauthorized)
 			return
 		}
 
-		// Use the user ID from the JWT token
+		
 		userID := claims.UserID
 
 		reservations, err := repo.ReservationRepo.GetReservationsByUser(userID)
@@ -61,7 +61,7 @@ func GetReservationsHandler(repo *repository.Repository) http.HandlerFunc {
 	}
 }
 
-// DeleteReservationHandler cancels a reservation.
+
 func DeleteReservationHandler(repo *repository.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)

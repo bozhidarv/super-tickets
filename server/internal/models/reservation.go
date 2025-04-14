@@ -1,6 +1,6 @@
 package models
 
-// Reservation represents a booking for a specific projection.
+
 type Reservation struct {
 	ID           int64 `db:"id"            json:"id"`
 	UserID       int64 `db:"user_id"       json:"user_id"`
