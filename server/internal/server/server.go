@@ -1,10 +1,10 @@
 package server
 
 import (
-	"moviereservationsystem/internal/handlers"
-	"moviereservationsystem/internal/middleware"
-	"moviereservationsystem/internal/repository"
 	"net/http"
+	"supertickets/internal/handlers"
+	"supertickets/internal/middleware"
+	"supertickets/internal/repository"
 
 	"github.com/gorilla/mux"
 )

@@ -2,13 +2,12 @@ package auth
 
 import (
 	"errors"
-	"moviereservationsystem/internal/models"
+	"supertickets/internal/models"
+	"supertickets/internal/utils"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
-
-var jwtKey = []byte("your_jwt_secret_key") // Ideally read from config
 
 // Claims defines the structure for JWT claims.
 type Claims struct {
@@ -28,7 +27,7 @@ func GenerateToken(user *models.User) (string, error) {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(jwtKey)
+	return token.SignedString([]byte(utils.EnvVars.JwtKey()))
 }
 
 // ValidateToken parses and validates a JWT.
@@ -37,8 +36,8 @@ func ValidateToken(tokenStr string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(
 		tokenStr,
 		claims,
-		func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
+		func(token *jwt.Token) (any, error) {
+			return utils.EnvVars.JwtKey(), nil
 		},
 	)
 	if err != nil {

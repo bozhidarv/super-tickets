@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"context"
-	"moviereservationsystem/internal/auth"
+	"supertickets/internal/auth"
 	"net/http"
 	"strings"
 )

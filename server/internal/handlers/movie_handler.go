@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
-	"moviereservationsystem/internal/models"
-	"moviereservationsystem/internal/repository"
 	"net/http"
 	"strconv"
+	"supertickets/internal/models"
+	"supertickets/internal/repository"
 
 	"github.com/gorilla/mux"
 )

@@ -1,4 +1,4 @@
-module moviereservationsystem
+module supertickets
 
 go 1.23.5
 

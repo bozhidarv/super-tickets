@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
-	"moviereservationsystem/internal/auth"
-	"moviereservationsystem/internal/middleware"
-	"moviereservationsystem/internal/models"
-	"moviereservationsystem/internal/repository"
+	"supertickets/internal/auth"
+	"supertickets/internal/middleware"
+	"supertickets/internal/models"
+	"supertickets/internal/repository"
 	"net/http"
 	"strconv"
 

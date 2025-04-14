@@ -2,24 +2,20 @@ package main
 
 import (
 	"log"
-	"moviereservationsystem/internal/repository"
-	"moviereservationsystem/internal/server"
 	"net/http"
-	"os"
+	"supertickets/internal/repository"
+	"supertickets/internal/server"
+	"supertickets/internal/utils"
 	"time"
 
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	// Read configuration (for simplicity, using an environment variable with a default)
-	dbURL := os.Getenv("DATABASE_URL")
-	if dbURL == "" {
-		dbURL = "postgres://user:password@localhost:5432/moviereservation?sslmode=disable"
-	}
+	utils.LoadEnvVars()
 
 	// Initialize the PostgreSQL connection using SQLX
-	db, err := repository.NewPostgresDB(dbURL)
+	db, err := repository.NewPostgresDB(utils.EnvVars.DbUrl())
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
@@ -34,7 +30,7 @@ func main() {
 	// Create and configure the HTTP server.
 	httpServer := &http.Server{
 		Handler:      srv.Router,
-		Addr:         ":8080",
+		Addr:         ":" + utils.EnvVars.Port(),
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}

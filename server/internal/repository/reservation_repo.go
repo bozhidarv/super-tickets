@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"moviereservationsystem/internal/models"
+	"supertickets/internal/models"
 	"time"
 
 	"github.com/jmoiron/sqlx"

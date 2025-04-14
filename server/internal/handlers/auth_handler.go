@@ -2,11 +2,13 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
-	"moviereservationsystem/internal/auth"
-	"moviereservationsystem/internal/models"
-	"moviereservationsystem/internal/repository"
+	"log/slog"
 	"net/http"
+	"supertickets/internal/auth"
+	"supertickets/internal/models"
+	"supertickets/internal/repository"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -71,6 +73,7 @@ func LoginHandler(repo *repository.Repository) http.HandlerFunc {
 			return
 		}
 
+		slog.Debug(creds.Username)
 		// Retrieve the user by username.
 		user, err := repo.UserRepo.GetUserByUsername(creds.Username)
 		if err != nil {
@@ -87,6 +90,7 @@ func LoginHandler(repo *repository.Repository) http.HandlerFunc {
 		// Generate a JWT token for the authenticated user.
 		token, err := auth.GenerateToken(user)
 		if err != nil {
+			fmt.Println(err)
 			http.Error(w, "Error generating token", http.StatusInternalServerError)
 			return
 		}
