@@ -69,7 +69,6 @@ func UpdateMovieHandler(repo *repository.Repository) http.HandlerFunc {
 		if err != nil {
 			http.Error(w, "Server Error", http.StatusInternalServerError)
 		}
-		w.WriteHeader(http.StatusOK)
 	}
 }
 

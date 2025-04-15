@@ -95,6 +95,5 @@ func LoginHandler(repo *repository.Repository) http.HandlerFunc {
 		}
 
 		w.Header().Set("Authorization", "Bearer "+token)
-		w.WriteHeader(http.StatusOK)
 	}
 }
